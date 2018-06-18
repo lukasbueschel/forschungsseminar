@@ -6,22 +6,28 @@ class Cube implements Displayable {
   public final static int TOP = 4;
   public final static int BOTTOM = 5;
 
-  private int x, y, z, size;
-  ArrayList<Rect> rects = new ArrayList<Rect>();
-  ArrayList<Line> lines = new ArrayList<Line>();
+  private PVector pos;
+  private ArrayList<Rect> rects = new ArrayList<Rect>();
+  private ArrayList<Line> lines = new ArrayList<Line>();
 
   public Cube(int posX, int posY, int posZ, int size) {
-    this.x = posX - size / 2;
-    this.y = posY - size / 2;
-    this.z = posZ + size / 2;
-    this.size = size;
+    pos = new PVector(posX - size / 2, posY - size / 2, posZ + size / 2);
 
-    rects.add(new Rect(x, y, z, 1, 1, 0, size));
-    rects.add(new Rect(x + size, y, z - size, -1, 1, 0, size));
-    rects.add(new Rect(x, y, z - size, 0, 1, 1, size));
-    rects.add(new Rect(x + size, y, z, 0, 1, -1, size));
-    rects.add(new Rect(x, y, z - size, 1, 0, 1, size));
-    rects.add(new Rect(x + size, y + size, z - size, -1, 0, 1, size));
+    rects.add(new Rect(0, 0, 0, 1, 1, 0, size));
+    rects.add(new Rect(size, 0, -size, -1, 1, 0, size));
+    rects.add(new Rect(0, 0, -size, 0, 1, 1, size));
+    rects.add(new Rect(size, 0, 0, 0, 1, -1, size));
+    rects.add(new Rect(0, 0, -size, 1, 0, 1, size));
+    rects.add(new Rect(size, size, -size, -1, 0, 1, size));
+  }
+
+  public void display() {
+    pushMatrix();
+    translate(pos.x, pos.y, pos.z);
+    for (Rect r : rects) {
+      r.display();
+    }
+    popMatrix();
   }
 
   public Rect getRect(int id) {
@@ -43,8 +49,7 @@ class Cube implements Displayable {
   }
 
   void setRectColor(int id, color c1, color c2) {
-    Rect r = rects.get(id);
-    r.setColor(c1, c2);
+    rects.get(id).setColor(c1, c2);
   }
 
   void setRectsType(int t) {
@@ -54,8 +59,7 @@ class Cube implements Displayable {
   }
 
   public void setRectType(int id, int t) {
-    Rect r = rects.get(id);
-    r.type = t;
+    rects.get(id).type = t;
   }
 
   void setRectType(int id, int t, color c) {
@@ -84,20 +88,18 @@ class Cube implements Displayable {
     }
   }
 
-  void setLineColor(int rectId, int lineId, color c) {
-    Line l = getLine(rectId, lineId);
-    l.setColor(c);
+  public void setLineColor(int rectId, int lineId, color c) {
+    getLine(rectId, lineId).setColor(c);
   }
 
-  void setLinesWidth(int w) {
+  public void setLinesWidth(int w) {
     for (int i = 0; i < 12; i ++) {
       getLine(i).setWidth(w);
     }
   }
 
-  void setLineWidth(int rectId, int lineId, int w) {
-    Line l = getLine(rectId, lineId);
-    l.setWidth(w);
+  public void setLineWidth(int rectId, int lineId, int w) {
+    getLine(rectId, lineId).setWidth(w);
   }
 
   public void setRectsDisplayFill(boolean display) {
@@ -106,29 +108,27 @@ class Cube implements Displayable {
     }
   }
 
-  void setLinesDisplayEnabled(boolean enabled) {
+  public void setLinesDisplayEnabled(boolean enabled) {
     for (Line line : lines) {
       line.setDisplayEnabled(enabled);
     }
   }
 
-  void display() {
-    for (Rect r : rects) {
-      r.display();
-    }
-  }
-
-  private Line getLine(int rectId, int lineId) {
+  public Line getLine(int rectId, int lineId) {
     int id = -1;
     switch (rectId) {
     case Cube.FRONT: 
       {
-        id = lineId;
+        if (lineId < 4) {
+          id = lineId;
+        }
         break;
       }
     case Cube.BACK: 
       {
-        id = lineId + 4;
+        if (lineId < 4) {
+          id = lineId + 4;
+        }
         break;
       }
     case Cube.LEFT: 
