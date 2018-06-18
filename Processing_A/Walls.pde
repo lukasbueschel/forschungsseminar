@@ -114,7 +114,6 @@ class FlowerWall extends Wall {
       }
       int x;
       int y = l;
-      Rect tile;
       for (x = 0; x < l; x++) {
         if (currentIndex == 2) {
           type = Rect.TYPE_RECT;
@@ -146,8 +145,13 @@ class FlowerWall extends Wall {
   private void initializeTile(int x, int y, int type, int currentIndex, color c) {
     Rect tile = setTile(x, y);
     tile.setType(type);
-    tile.setLinesColor(c);
-    tile.setColor(c);
+    tile.setLine(Rect.TOP, c);
+    tile.setLine(Rect.LEFT, c);
+    if (type == Rect.TYPE_TRI_1) {
+      tile.setLine(Rect.LINE_TRI_1, c);
+    } else if (type == Rect.TYPE_TRI_2) {
+      tile.setLine(Rect.LINE_TRI_2, c);
+    }
     if (currentIndex == 0) {
       tile.removeLine(Rect.BOTTOM);
       tile.removeLine(Rect.RIGHT);

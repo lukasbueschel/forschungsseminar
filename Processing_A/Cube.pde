@@ -8,7 +8,6 @@ class Cube implements Displayable {
 
   private PVector pos;
   private ArrayList<Rect> rects = new ArrayList<Rect>();
-  private ArrayList<Line> lines = new ArrayList<Line>();
 
   public Cube(int posX, int posY, int posZ, int size) {
     pos = new PVector(posX - size / 2, posY - size / 2, posZ + size / 2);
@@ -109,8 +108,10 @@ class Cube implements Displayable {
   }
 
   public void setLinesDisplayEnabled(boolean enabled) {
-    for (Line line : lines) {
-      line.setDisplayEnabled(enabled);
+    for (Rect r : rects) {
+      for(Line l : r.getLines()) {
+        l.setDisplayEnabled(enabled);
+      }
     }
   }
 
@@ -224,4 +225,5 @@ class Cube implements Displayable {
     }
     return line;
   }
+  
 }

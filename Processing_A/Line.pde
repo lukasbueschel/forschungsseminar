@@ -65,16 +65,11 @@ class Line implements Displayable {
   private int currentFrame = -1;
   private color from, to;
 
-  public void animateAlpha(color c, float start, float end, int duration) {
-    alphaStart = start;
-    alphaStep = (end - start) / duration;
-    currentFrame = duration;
-  }
-
   public void animateColor(color from, color to, int duration) {
     this.duration = duration;
     this.from = from;
     this.to = to;
     currentFrame = duration;
   }
+  
 }

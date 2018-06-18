@@ -16,6 +16,7 @@ void setup() {
   
   modes.add(new FlowerMode());
   modes.add(new InfiniteMode());
+  modes.add(new PointsMode());
 
 }
 
