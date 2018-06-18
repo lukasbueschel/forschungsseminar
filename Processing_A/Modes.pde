@@ -1,7 +1,7 @@
 class Mode {
 
   public ArrayList<Cube> cubes = new ArrayList<Cube>();
-  private ArrayList<Displayable> displayables = new ArrayList<Displayable>(); 
+  protected ArrayList<Displayable> displayables = new ArrayList<Displayable>(); 
 
   public Mode() {
   }
@@ -273,7 +273,6 @@ class FlowerMode extends Mode {
   }
 
   private int currentFrame;
-  private int maxDistance = 1;
 
   private void animate() {
     int maxDistance = (int)(9 * (currentFrame / 60f)) + 1;
@@ -282,7 +281,7 @@ class FlowerMode extends Mode {
       color from = color(255, 255, 255, alpha * 2);
       color to = color(255, 255, 255, getAlpha(i, maxDistance));
       for (Line l : lines.get(i)) {
-        l.animateColor(from, to, 60 * maxDistance / 3);
+        l.animate(LineAnimation.COLOR, from, to, 60 * maxDistance / 3);
       }
     }
     currentFrame = 60;
@@ -323,6 +322,54 @@ class PointsMode extends Mode {
         popMatrix();
       }
       y--;
+    }
+  }
+}
+
+class NewMode extends Mode {
+
+  private Line l1, l2;
+  
+  private boolean animate = false;
+  private int frame = 0;
+
+  public NewMode() {
+    super();
+    l1 = new Line(0, 0, 0, 200, -100, 0);
+    l2 = new Line(200, -100, 0, 200, -100, 0);
+    color c = color(255, 255, 255, 0);
+    l1.setColor(c);
+    l2.setColor(c);
+    displayables.add(l1);
+    displayables.add(l2);
+  }
+
+  public void display() {
+    super.display();
+    if(frame == 120) {
+      animate = false;
+    }
+    if(animate) {
+      if(frame == 60) {
+        l2.animate(LineAnimation.GRADIENT, 
+        color(255, 255, 255, 0), 
+        color(255, 255, 255, 255), 
+        120);
+      } else if (frame == 120) {
+        
+      }
+      frame++;
+    }
+  }
+
+  public void onKeyPressed() {
+    if (key == 'x') {
+      frame = 0;
+      animate = true;
+      l1.animate(LineAnimation.GRADIENT, 
+        color(255, 255, 255, 0), 
+        color(255, 255, 255, 255), 
+        120);
     }
   }
 }

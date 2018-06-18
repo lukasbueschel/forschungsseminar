@@ -1,4 +1,4 @@
-int mode = 0;
+int mode = 3;
 ArrayList<Mode> modes = new ArrayList<Mode>();
 
 PVector center = new PVector(700, 0, 700);
@@ -17,7 +17,7 @@ void setup() {
   modes.add(new FlowerMode());
   modes.add(new InfiniteMode());
   modes.add(new PointsMode());
-
+  modes.add(new NewMode());
 }
 
 void draw() {
