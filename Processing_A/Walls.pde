@@ -171,6 +171,14 @@ class FlowerWall extends Wall {
     }
     l.add(tile);
   }
+  
+  public ArrayList<Line> getLines() {
+    ArrayList<Line> lines = new ArrayList<Line>();
+    for(Rect r : tiles) {
+      lines.addAll(r.getLines());
+    }
+    return lines;
+  }
 
   public ArrayList<Line> getLinesWithDistance(int d) {
     ArrayList<Rect> rs = distances.get(d);

@@ -17,7 +17,8 @@ void setup() {
   modes.add(new FlowerMode());
   modes.add(new InfiniteMode());
   modes.add(new PointsMode());
-  modes.add(new NewMode());
+  modes.add(new CubesMode());
+  modes.add(new LinesMode());
 }
 
 void draw() {
