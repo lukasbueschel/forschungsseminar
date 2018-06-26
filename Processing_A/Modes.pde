@@ -6,10 +6,6 @@ class Mode {
   public Mode() {
   }
 
-  public Mode(ArrayList<Cube> cubes) {
-    this.cubes = cubes;
-  }
-
   public void display() {
     for (Displayable d : displayables) {
       d.display();
@@ -19,49 +15,56 @@ class Mode {
   public void onKeyPressed() {
   }
 
-  void setCubesRectColor(color c) {
-    setCubesRectColor(c, c);
-  }
-
-  void setCubesRectColor(color c1, color c2) {
-    for (Cube cube : cubes) {
-      cube.setRectsColor(c1, c2);
-    }
-  }
-
-  void setCubesRectType(int t) {
-    for (Cube cube : cubes) {
-      cube.setRectsType(t);
-    }
-  }
-
-  void setCubesLineColor(color c) {
-    for (Cube cube : cubes) {
-      cube.setLinesColor(c);
-    }
-  }
-
-  void setCubesLineWidth(int w) {
-    for (Cube cube : cubes) {
-      cube.setLinesWidth(w);
-    }
-  }
 }
 
-class FourCubes extends Mode {
+class CubeMode extends Mode {
 
-  private ArrayList<Cube> cubes = new ArrayList<Cube>();
+  private static final int LEVELS = 3;
+  private static final int SIZE = 100;
 
-  public FourCubes() {
-    cubes.add(new Cube(50, -50, 150, 100));
-    cubes.add(new Cube(150, -50, 50, 100));
-    cubes.add(new Cube(50, -150, 50, 100));
+  protected int levels = 3;
+  protected int size = 100;
+
+  protected ArrayList<Cube> cubes = new ArrayList<Cube>();
+
+  public CubeMode() {
+    this(LEVELS, SIZE);
   }
 
-  public void display() {
-    for (Cube cube : cubes) {
-      cube.display();
+  public CubeMode(int ls, int s) {
+    levels = ls;
+    size= s;
+
+    int t = size / 2;
+    for (int l = 0; l < levels; l++) {
+      int max = (levels - l) * size;
+      int y = -(l * size) - t;
+      for (int x = t; x < max; x += size) {
+        Cube c = new Cube(x, y, max - x, size);
+        displayables.add(c);
+        cubes.add(c);
+      }
     }
+  }
+  
+  public Cube getCube(int l, int n) {
+    int t = levels;
+    int i = 0;
+    int c = 0;
+    while(c < l) {
+      i += t;
+      t--;
+      c++;
+    }
+    return cubes.get(i + n);
+  }
+  
+}
+
+class FourCubes extends CubeMode {
+
+  public FourCubes() {
+    super(2, 100);
   }
 
   public void onKeyPressed() {
