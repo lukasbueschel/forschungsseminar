@@ -14,7 +14,6 @@ class Mode {
 
   public void onKeyPressed() {
   }
-
 }
 
 class CubeMode extends Mode {
@@ -46,19 +45,24 @@ class CubeMode extends Mode {
       }
     }
   }
-  
+
   public Cube getCube(int l, int n) {
-    int t = levels;
-    int i = 0;
-    int c = 0;
-    while(c < l) {
+    if (l >= levels) {
+      return null;
+    }
+    int i = 0; // index of cube
+    int c = 0; // current level
+    int t = levels; // number of cubes on current level
+    while (c < l) {
       i += t;
       t--;
       c++;
     }
+    if (n >= t) {
+      return null;
+    }
     return cubes.get(i + n);
   }
-  
 }
 
 class FourCubes extends CubeMode {
