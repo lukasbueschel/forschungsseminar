@@ -48,6 +48,31 @@ class Mode {
   }
 }
 
+class FourCubes extends Mode {
+
+  private ArrayList<Cube> cubes = new ArrayList<Cube>();
+
+  public FourCubes() {
+    cubes.add(new Cube(50, -50, 150, 100));
+    cubes.add(new Cube(150, -50, 50, 100));
+    cubes.add(new Cube(50, -150, 50, 100));
+  }
+
+  public void display() {
+    for (Cube cube : cubes) {
+      cube.display();
+    }
+  }
+
+  public void onKeyPressed() {
+    if (key == 'x') {
+      for (Cube c : cubes) {
+        c.setRectsColor(color(random(255), random(255), random(255)));
+      }
+    }
+  }
+}
+
 class InfiniteMode extends Mode {
 
   private ArrayList<Cube> cubes = new ArrayList<Cube>();

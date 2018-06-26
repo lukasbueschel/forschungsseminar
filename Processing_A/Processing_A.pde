@@ -1,4 +1,4 @@
-int mode = 3;
+int mode = 0;
 ArrayList<Mode> modes = new ArrayList<Mode>();
 
 PVector center = new PVector(700, 0, 700);
@@ -6,14 +6,20 @@ int eyeX = 0;
 int eyeY = 0;
 float cameraDirectionXZ = 225f;
 float cameraDirectionXY = 0;
+boolean moveCameraXZ = false;
+boolean ortho = true;
 
 void setup() {
   size(1200, 800, P3D);
   smooth(8);
 
-  ortho(-width/2, width/2, -height/2, height/2);
+  if(ortho) {
+    ortho();
+  }
+  //
   calculateCamera();
-  
+
+  modes.add(new FourCubes());
   modes.add(new FlowerMode());
   modes.add(new InfiniteMode());
   modes.add(new PointsMode());
@@ -22,7 +28,7 @@ void setup() {
 }
 
 void draw() {
-  background(0); 
+  background(0);
   //translate(width/2, height/2, 0);
   moveCamera(); 
 
@@ -52,6 +58,8 @@ void keyPressed() {
   } else if (key == 'r') {
   } else if (key == 'h') {
   } else if (key == 'x') {
+  } else if (key == ' ') {
+    moveCameraXZ = !moveCameraXZ;
   }
   modes.get(mode).onKeyPressed();
 }
@@ -78,7 +86,6 @@ void moveCamera() {
     }
   }
   PVector v; 
-  boolean upAndDown = false; 
   boolean switchZAndY = true; 
   switch(k) {
   case LEFT : 
@@ -88,7 +95,7 @@ void moveCamera() {
     v = angleToVector(cameraDirectionXZ - 90); 
     break; 
   case UP : 
-    if (upAndDown) {
+    if (moveCameraXZ) {
       v = angleToVector(cameraDirectionXZ);
     } else {
       v = new PVector(0, -1, 0); 
@@ -96,7 +103,7 @@ void moveCamera() {
     }
     break; 
   case DOWN : 
-    if (upAndDown) {
+    if (moveCameraXZ) {
       v = angleToVector(cameraDirectionXZ + 180);
     } else {
       v = new PVector(0, 1, 0); 
