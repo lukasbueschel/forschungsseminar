@@ -24,8 +24,7 @@ void setup() {
   modes.add(new FlowerMode());
   modes.add(new InfiniteMode());
   modes.add(new PointsMode());
-  modes.add(new CubesMode());
-  modes.add(new LinesMode());
+  modes.add(new AnimatedCubesMode());
 }
 
 void draw() {

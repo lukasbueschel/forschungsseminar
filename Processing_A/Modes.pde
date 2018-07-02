@@ -1,6 +1,5 @@
 class Mode {
 
-  public ArrayList<Cube> cubes = new ArrayList<Cube>();
   protected ArrayList<Displayable> displayables = new ArrayList<Displayable>(); 
 
   public Mode() {
@@ -80,18 +79,12 @@ class FourCubes extends CubeMode {
   }
 }
 
-class InfiniteMode extends Mode {
+class InfiniteMode extends CubeMode {
 
-  private ArrayList<Cube> cubes = new ArrayList<Cube>();
   private ArrayList<Rect> tiles = new ArrayList<Rect>();
 
-  public InfiniteMode() { 
-    cubes.add(new Cube(50, -50, 250, 100));
-    cubes.add(new Cube(150, -50, 150, 100));
-    cubes.add(new Cube(250, -50, 50, 100));
-    cubes.add(new Cube(50, -150, 150, 100));
-    cubes.add(new Cube(150, -150, 50, 100));
-    cubes.add(new Cube(50, -250, 50, 100));
+  public InfiniteMode() {
+    super(3, 100);
 
     color cc1 = #1E88E5;
     color cc2 = #1565C0;
@@ -186,21 +179,15 @@ class InfiniteMode extends Mode {
   }
 }
 
-class FlowerMode extends Mode {
+class FlowerMode extends CubeMode {
 
-  private ArrayList<Cube> cubes = new ArrayList<Cube>();
   private ArrayList<FlowerWall> walls = new ArrayList<FlowerWall>();
   private ArrayList<ArrayList<Line>> lines = new ArrayList<ArrayList<Line>>();
 
   private boolean displayCubes = true;
 
   public FlowerMode() {
-    cubes.add(new Cube(50, -50, 250, 100));
-    cubes.add(new Cube(150, -50, 150, 100));
-    cubes.add(new Cube(250, -50, 50, 100));
-    cubes.add(new Cube(50, -150, 150, 100));
-    cubes.add(new Cube(150, -150, 50, 100));
-    cubes.add(new Cube(50, -250, 50, 100));
+    super(3, 100);
     for (int i = 0; i < cubes.size(); i++) {
       Cube c = cubes.get(i);
       //c.setRectsColor(#000000);
@@ -284,9 +271,7 @@ class FlowerMode extends Mode {
 
   public void display() {
     if (displayCubes) {
-      for (Cube c : cubes) {
-        c.display();
-      }
+      super.display();
     }
     for (Wall w : walls) {
       w.display();
@@ -335,146 +320,41 @@ class PointsMode extends Mode {
     int r = 3;
     int y = -1;
     for (int i = 3; i > 0; i--) {
-      fill(color(204, 153, 0, abs((float)y / 4) * 255));
+      stroke(color(204, 153, 0, abs((float)y / 2) * 255));
+      strokeWeight(r);
       for (int x = 0; x <= i; x++) {
         pushMatrix();
         translate(x * size, y * size, (i-x) * size);
-        sphere(r);
-        translate(0, size, 0);
-        sphere(r);
+        beginShape(POINTS);
+        vertex(0, 0, 0);
+        vertex(0, size, 0);
         if (i == x) {
+          endShape();
           popMatrix();
           continue;
         }
-        translate(size, 0, 0);
-        sphere(r);
-        translate(0, -size, 0);
-        sphere(r);
+        vertex(size, 0, 0);
+        vertex(size, size, 0);
+        endShape();
         popMatrix();
       }
       y--;
     }
     translate(0, -3 * size, 0);
-    sphere(r);
+    beginShape(POINTS);
+    vertex(0, 0, 0);
+    endShape();
   }
 }
 
-class NewMode extends Mode {
-
-  private Line l1, l2;
+public class AnimatedCubesMode extends CubeMode {
 
   private boolean animate = false;
   private int frame = 0;
 
-  public NewMode() {
-    super();
-    l1 = new Line(0, 0, 0, 200, -100, 0);
-    l2 = new Line(200, -100, 0, 200, -100, 0);
-    color c = color(255, 255, 255, 0);
-    l1.setColor(c);
-    l2.setColor(c);
-    displayables.add(l1);
-    displayables.add(l2);
-  }
+  public AnimatedCubesMode() {
+    super(3, 100);
 
-  public void display() {
-    super.display();
-    if (frame == 120) {
-      animate = false;
-    }
-    if (animate) {
-      if (frame == 60) {
-        l2.animate(LineAnimation.GRADIENT, 
-          color(255, 255, 255, 0), 
-          color(255, 255, 255, 255), 
-          120);
-      } else if (frame == 120) {
-      }
-      frame++;
-    }
-  }
-
-  public void onKeyPressed() {
-    if (key == 'x') {
-      frame = 0;
-      animate = true;
-      l1.animate(LineAnimation.GRADIENT, 
-        color(255, 255, 255, 0), 
-        color(255, 255, 255, 255), 
-        120);
-    }
-  }
-}
-
-
-class LinesMode extends Mode {
-
-  private ArrayList<Cube> cubes = new ArrayList<Cube>();
-  private ArrayList<FlowerWall> walls = new ArrayList<FlowerWall>();
-
-  public LinesMode() {
-    color lineColor = #333333;
-    cubes.add(new Cube(50, -50, 250, 100));
-    cubes.add(new Cube(150, -50, 150, 100));
-    cubes.add(new Cube(250, -50, 50, 100));
-    cubes.add(new Cube(50, -150, 150, 100));
-    cubes.add(new Cube(150, -150, 50, 100));
-    cubes.add(new Cube(50, -250, 50, 100));
-    for (int i = 0; i < cubes.size(); i++) {
-      Cube c = cubes.get(i);
-      c.setRectsColor(#000000);
-      c.setRectType(Cube.FRONT, Rect.TYPE_TRI_2);
-      c.setRectType(Cube.RIGHT, Rect.TYPE_TRI_1);
-      c.setRectType(Cube.TOP, Rect.TYPE_TRI_1);
-      c.setLineColor(Cube.FRONT, Rect.LINE_TRI_2, lineColor);
-      c.setLineColor(Cube.RIGHT, Rect.LINE_TRI_1, lineColor);
-      c.setLineColor(Cube.TOP, Rect.LINE_TRI_1, lineColor);
-      if (i > 2) {
-        c.setLineColor(Cube.FRONT, Rect.BOTTOM, lineColor);
-        c.setLineColor(Cube.RIGHT, Rect.BOTTOM, lineColor);
-      }
-      if (i < 4 && i != 2) {
-        c.setLineColor(Cube.RIGHT, Rect.RIGHT, lineColor);
-      }
-    }
-
-    walls.add(new FlowerWall(0, 0, 0, 1, -1, 0, 100, 8));
-    walls.add(new FlowerWall(0, 0, 0, 0, -1, 1, 100, 8));
-    walls.add(new FlowerWall(0, 0, 0, 1, 0, 1, 100, 8));
-
-    for (FlowerWall w : walls) {
-      for (Line l : w.getLines()) {
-        l.setColor(lineColor);
-      }
-    }
-  }
-
-  public void display() {
-    super.display();
-    for (Cube c : cubes) {
-      c.display();
-    }
-    for (Wall w : walls) {
-      w.display();
-    }
-  }
-}
-
-public class CubesMode extends Mode {
-
-  private boolean animate = false;
-  private int frame = 0;
-
-  private ArrayList<Cube> cubes = new ArrayList<Cube>();
-
-  public CubesMode() {
-    color lineColor = #333333;
-    cubes.add(new Cube(50, -50, 250, 100));
-    cubes.add(new Cube(150, -50, 150, 100));
-    cubes.add(new Cube(250, -50, 50, 100));
-    cubes.add(new Cube(50, -150, 150, 100));
-    cubes.add(new Cube(150, -150, 50, 100));
-    cubes.add(new Cube(50, -250, 50, 100));
     for (Cube c : cubes) {
       c.setRectsDisplayFill(false);
     }
@@ -486,9 +366,7 @@ public class CubesMode extends Mode {
 
   public void display() {
     super.display();
-    for (Cube c : cubes) {
-      c.display();
-    }
+
     if (animate) {
       if (frame == d/2) {
         animateVerticals(from, to, d);

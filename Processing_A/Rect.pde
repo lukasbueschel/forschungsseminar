@@ -68,7 +68,7 @@ class Rect implements Displayable {
     color2 = c2;
   }
 
-  void display() {
+  public void display() {
     if (!displayEnabled) {
       return;
     }
