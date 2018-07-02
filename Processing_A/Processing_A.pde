@@ -1,19 +1,20 @@
-int mode = 0;
+int mode = 1;
 ArrayList<Mode> modes = new ArrayList<Mode>();
 
-PVector center = new PVector(700, 0, 700);
+PVector center = new PVector(700, 250, 700);
 int eyeX = 0;
 int eyeY = 0;
 float cameraDirectionXZ = 225f;
 float cameraDirectionXY = 0;
 boolean moveCameraXZ = false;
 boolean ortho = true;
+int mouseWheel = 0;
 
 void setup() {
   size(1200, 800, P3D);
   smooth(8);
 
-  if(ortho) {
+  if (ortho) {
     ortho();
   }
   //
@@ -49,6 +50,11 @@ void mousePressed() {
 void mouseDragged() {
   cameraDirectionXZ =  -(mouseX - mxStart) / 10f + eyeDirectionStart; 
   cameraDirectionXY = (mouseY - myStart) / 10f + eyeAngleStart; 
+  calculateCamera();
+}
+
+void mouseWheel(MouseEvent event) {
+  mouseWheel += event.getCount();
   calculateCamera();
 }
 
@@ -144,4 +150,9 @@ void calculateCamera() {
   camera(center.x, center.y, center.z, 
     center.x + direction.x, center.y + direction.y, center.z + direction.z, 
     0, 1.0, 0);
+
+  float fov = PI/2.0 + mouseWheel * PI/32.0;
+  float cameraZ = (height/2.0) / tan(fov/2.0);
+  perspective(fov, float(width)/float(height), 
+    cameraZ/10.0, cameraZ*10.0);
 }
