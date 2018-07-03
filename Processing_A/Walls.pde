@@ -83,7 +83,7 @@ class InfiniteWall extends Wall {
 }
 
 /*
- *
+ * Flower Wall
  */
 
 class FlowerWall extends Wall {

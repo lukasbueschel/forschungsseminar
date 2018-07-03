@@ -68,6 +68,11 @@ class FourCubes extends CubeMode {
 
   public FourCubes() {
     super(2, 100);
+
+    for (Cube c : cubes) {
+      c.setRectsColor(#000000);
+      c.setLinesColor(#ffffff);
+    }
   }
 
   public void onKeyPressed() {
@@ -188,6 +193,7 @@ class FlowerMode extends CubeMode {
 
   public FlowerMode() {
     super(3, 100);
+
     for (int i = 0; i < cubes.size(); i++) {
       Cube c = cubes.get(i);
       //c.setRectsColor(#000000);
@@ -245,7 +251,7 @@ class FlowerMode extends CubeMode {
     for (Line l : temp) {
       l.setColor(#000000);
     }
-    temp.clear();   
+    temp.clear();
     temp.add(cubes.get(5).getLine(Cube.TOP, Rect.LINE_TRI_1));
     temp.add(cubes.get(5).getLine(Cube.FRONT, Rect.LINE_TRI_2));
     temp.add(cubes.get(3).getLine(Cube.TOP, Rect.LINE_TRI_1));
@@ -309,6 +315,122 @@ class FlowerMode extends CubeMode {
   }
 }
 
+/*
+ * Flower Mode (Advanced)
+ */
+
+class AdvancedFlowerMode extends CubeMode {
+
+  private ArrayList<FlowerWall> walls = new ArrayList<FlowerWall>();
+  private ArrayList<ArrayList<Line>> lines = new ArrayList<ArrayList<Line>>();
+
+  public AdvancedFlowerMode(int l) {
+    super(l, 100);
+
+    walls.add(new FlowerWall(0, 0, 0, 1, -1, 0, 100, 5));
+    walls.add(new FlowerWall(0, 0, 0, 0, -1, 1, 100, 5));
+    walls.add(new FlowerWall(0, 0, 0, 1, 0, 1, 100, 5));
+
+    ArrayList<Line> temp;
+    for (int distance = 0; distance < 9; distance++) {
+      temp = new ArrayList<Line>();
+      for (FlowerWall wall : walls) {
+        temp.addAll(wall.getLinesWithDistance(distance));
+      }
+      lines.add(temp);
+    }
+    temp = lines.get(0);
+    for (Line line : temp) {
+      line.setColor(#000000);
+    }
+
+    if (l % 2 == 0) {
+      for (Cube c : cubes) {
+        c.setRectsColor(#000000);
+        c.setLinesColor(#ffffff);
+      }
+    } else {
+      for (int i = 0; i < cubes.size(); i++) {
+        Cube c = cubes.get(i);
+        //c.setRectsColor(#000000);
+        c.setRectsDisplayFill(false);
+        c.setRectType(Cube.FRONT, Rect.TYPE_TRI_2);
+        c.setRectType(Cube.RIGHT, Rect.TYPE_TRI_1);
+        c.setRectType(Cube.TOP, Rect.TYPE_TRI_1);
+        c.setLineColor(Cube.FRONT, Rect.LINE_TRI_2, #ffffff);
+        c.setLineColor(Cube.RIGHT, Rect.LINE_TRI_1, #ffffff);
+        c.setLineColor(Cube.TOP, Rect.LINE_TRI_1, #ffffff);
+        if (i > 2) {
+          c.setLineColor(Cube.FRONT, Rect.BOTTOM, #ffffff);
+          c.setLineColor(Cube.RIGHT, Rect.BOTTOM, #ffffff);
+        }
+        if (i < 4 && i != 2) {
+          c.setLineColor(Cube.RIGHT, Rect.RIGHT, #ffffff);
+        }
+      }
+    }
+    /*
+     temp.clear();    
+     temp.add(cubes.get(3).getLine(Cube.RIGHT, Rect.RIGHT));
+     temp.add(cubes.get(3).getLine(Cube.RIGHT, Rect.LINE_TRI_1));
+     temp.add(cubes.get(3).getLine(Cube.RIGHT, Rect.BOTTOM));
+     temp.add(cubes.get(1).getLine(Cube.TOP, Rect.LINE_TRI_1));
+     temp.add(cubes.get(4).getLine(Cube.FRONT, Rect.BOTTOM));
+     temp.add(cubes.get(4).getLine(Cube.FRONT, Rect.LINE_TRI_2));
+     temp = lines.get(1);
+     for (Line l : temp) {
+     l.setColor(#000000);
+     }
+     temp.clear();   
+     temp.add(cubes.get(5).getLine(Cube.FRONT, Rect.BOTTOM));
+     temp.add(cubes.get(3).getLine(Cube.FRONT, Rect.BOTTOM));
+     temp.add(cubes.get(0).getLine(Cube.RIGHT, Rect.RIGHT));
+     temp.add(cubes.get(1).getLine(Cube.RIGHT, Rect.RIGHT));
+     temp.add(cubes.get(4).getLine(Cube.RIGHT, Rect.BOTTOM));  
+     temp.add(cubes.get(5).getLine(Cube.RIGHT, Rect.BOTTOM));
+     temp = lines.get(2);
+     for (Line l : temp) {
+     l.setColor(#000000);
+     }
+     temp.clear();
+     temp.add(cubes.get(5).getLine(Cube.TOP, Rect.LINE_TRI_1));
+     temp.add(cubes.get(5).getLine(Cube.FRONT, Rect.LINE_TRI_2));
+     temp.add(cubes.get(3).getLine(Cube.TOP, Rect.LINE_TRI_1));
+     temp.add(cubes.get(3).getLine(Cube.FRONT, Rect.LINE_TRI_2));
+     temp.add(cubes.get(0).getLine(Cube.TOP, Rect.LINE_TRI_1));
+     temp.add(cubes.get(0).getLine(Cube.FRONT, Rect.LINE_TRI_2));
+     temp.add(cubes.get(0).getLine(Cube.RIGHT, Rect.LINE_TRI_1));
+     temp.add(cubes.get(1).getLine(Cube.FRONT, Rect.LINE_TRI_2));
+     temp.add(cubes.get(1).getLine(Cube.RIGHT, Rect.LINE_TRI_1));
+     temp.add(cubes.get(2).getLine(Cube.FRONT, Rect.LINE_TRI_2));
+     temp.add(cubes.get(2).getLine(Cube.RIGHT, Rect.LINE_TRI_1));
+     temp.add(cubes.get(2).getLine(Cube.TOP, Rect.LINE_TRI_1));
+     temp.add(cubes.get(4).getLine(Cube.RIGHT, Rect.LINE_TRI_1));
+     temp.add(cubes.get(4).getLine(Cube.TOP, Rect.LINE_TRI_1));  
+     temp.add(cubes.get(5).getLine(Cube.RIGHT, Rect.LINE_TRI_1));
+     for (int i = 0; i < 9; i++) {
+     color c = color(255, 255, 255, getAlpha(i, 9));
+     for (Line l : lines.get(i)) {
+     l.setColor(c);
+     }
+     }*/
+  }
+
+  public void display() {
+    super.display();
+    for (Wall w : walls) {
+      w.display();
+    }
+  }
+
+  public void onKeyPressed() {
+  }
+}
+
+/*
+ * Points Mode
+ */
+
 class PointsMode extends Mode {
 
   private int size = 100;
@@ -352,8 +474,8 @@ public class AnimatedCubesMode extends CubeMode {
   private boolean animate = false;
   private int frame = 0;
 
-  public AnimatedCubesMode() {
-    super(3, 100);
+  public AnimatedCubesMode(int l) {
+    super(l, 100);
 
     for (Cube c : cubes) {
       c.setRectsDisplayFill(false);
@@ -395,8 +517,8 @@ public class AnimatedCubesMode extends CubeMode {
       c.getLine(Cube.TOP, Rect.RIGHT).animate(LineAnimation.GRADIENT, from, to, d); 
       c.getLine(Cube.TOP, Rect.BOTTOM).animate(LineAnimation.GRADIENT, from, to, d);
     }
-    for (int i = 0; i < 3; i++) {
-      Cube c = cubes.get(i);
+    for (int i = 0; i < levels; i++) {
+      Cube c = getCube(0, i);
       c.getLine(Cube.FRONT, Rect.BOTTOM).animate(LineAnimation.GRADIENT, from, to, d);
       c.getLine(Cube.RIGHT, Rect.BOTTOM).animate(LineAnimation.GRADIENT, from, to, d);
     }
@@ -408,8 +530,8 @@ public class AnimatedCubesMode extends CubeMode {
       c.getLine(Cube.FRONT, Rect.LEFT).animate(LineAnimation.GRADIENT, from, to, d); 
       c.getLine(Cube.FRONT, Rect.RIGHT).animate(LineAnimation.GRADIENT, from, to, d);
     }
-    cubes.get(2).getLine(Cube.RIGHT, Rect.RIGHT).animate(LineAnimation.GRADIENT, from, to, d);
-    cubes.get(4).getLine(Cube.RIGHT, Rect.RIGHT).animate(LineAnimation.GRADIENT, from, to, d);
-    cubes.get(5).getLine(Cube.RIGHT, Rect.RIGHT).animate(LineAnimation.GRADIENT, from, to, d);
+    for (int l = 0; l < levels; l++) {
+      getCube(l, levels - l - 1).getLine(Cube.RIGHT, Rect.RIGHT).animate(LineAnimation.GRADIENT, from, to, d);
+    }
   }
 }

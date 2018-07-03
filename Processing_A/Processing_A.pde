@@ -1,30 +1,40 @@
-int mode = 1;
+int mode = 0;
 ArrayList<Mode> modes = new ArrayList<Mode>();
 
-PVector center = new PVector(700, 250, 700);
+PVector center = new PVector();
 int eyeX = 0;
 int eyeY = 0;
-float cameraDirectionXZ = 225f;
+float cameraDirectionXZ = 0;
 float cameraDirectionXY = 0;
 boolean moveCameraXZ = false;
 boolean ortho = true;
 int mouseWheel = 0;
 
+void resetView() {
+  center = new PVector(700, -250, 700);
+  eyeX = 0;
+  eyeY = 0;
+  cameraDirectionXZ = 225f;
+  cameraDirectionXY = 0;
+  mouseWheel = 0;
+  calculateCamera();
+}
+
 void setup() {
-  size(1200, 800, P3D);
+  size(800, 600, P3D);
   smooth(8);
 
   if (ortho) {
     ortho();
   }
-  //
-  calculateCamera();
+  resetView();
 
   modes.add(new FourCubes());
   modes.add(new FlowerMode());
+  modes.add(new AdvancedFlowerMode(2));
   modes.add(new InfiniteMode());
   modes.add(new PointsMode());
-  modes.add(new AnimatedCubesMode());
+  modes.add(new AnimatedCubesMode(2));
 }
 
 void draw() {
@@ -47,21 +57,26 @@ void mousePressed() {
 }
 
 void mouseDragged() {
-  cameraDirectionXZ =  -(mouseX - mxStart) / 10f + eyeDirectionStart; 
+  //cameraDirectionXZ =  -(mouseX - mxStart) / 10f + eyeDirectionStart; 
   cameraDirectionXY = (mouseY - myStart) / 10f + eyeAngleStart; 
   calculateCamera();
 }
 
 void mouseWheel(MouseEvent event) {
   mouseWheel += event.getCount();
-  calculateCamera();
+  if (!ortho) {
+    float fov = PI/2.0 + mouseWheel * PI/90.0;
+    float cameraZ = (height/2.0) / tan(fov/2.0);
+    perspective(fov, float(width)/float(height), 
+      cameraZ/10.0, cameraZ*10.0);
+  }
 }
 
 void keyPressed() {
   if (key == 'm') {
     mode = (mode + 1) % modes.size();
   } else if (key == 'r') {
-  } else if (key == 'h') {
+    resetView();
   } else if (key == 'x') {
   } else if (key == ' ') {
     moveCameraXZ = !moveCameraXZ;
@@ -90,14 +105,14 @@ void moveCamera() {
       break;
     }
   }
-  PVector v; 
+  PVector v = new PVector(0,0,0); 
   boolean switchZAndY = true; 
   switch(k) {
   case LEFT : 
-    v = angleToVector(cameraDirectionXZ + 90); 
+    //v = angleToVector(cameraDirectionXZ + 90); 
     break; 
   case RIGHT : 
-    v = angleToVector(cameraDirectionXZ - 90); 
+    //v = angleToVector(cameraDirectionXZ - 90); 
     break; 
   case UP : 
     if (moveCameraXZ) {
@@ -149,9 +164,4 @@ void calculateCamera() {
   camera(center.x, center.y, center.z, 
     center.x + direction.x, center.y + direction.y, center.z + direction.z, 
     0, 1.0, 0);
-
-  float fov = PI/2.0 + mouseWheel * PI/32.0;
-  float cameraZ = (height/2.0) / tan(fov/2.0);
-  perspective(fov, float(width)/float(height), 
-    cameraZ/10.0, cameraZ*10.0);
 }
